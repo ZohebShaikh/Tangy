@@ -3,7 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32210.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TangyWeb_Server", "TangyWeb_Server\TangyWeb_Server.csproj", "{4A4363EF-C343-43CC-834B-B1840FD3F500}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TangyWeb_Server", "TangyWeb_Server\TangyWeb_Server.csproj", "{4A4363EF-C343-43CC-834B-B1840FD3F500}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TangyWeb_Client", "TangyWeb_Client\TangyWeb_Client.csproj", "{140BECD7-0772-4B17-ACFF-39B95D13C6B5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{3C28AD28-C1AF-4B5F-B811-B8D1FF68E571}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tangy_Models", "Tangy_Models\Tangy_Models.csproj", "{AF6C1586-FA49-4091-A4B5-9D8441FFD226}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +24,14 @@ Global
 		{4A4363EF-C343-43CC-834B-B1840FD3F500}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A4363EF-C343-43CC-834B-B1840FD3F500}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A4363EF-C343-43CC-834B-B1840FD3F500}.Release|Any CPU.Build.0 = Release|Any CPU
+		{140BECD7-0772-4B17-ACFF-39B95D13C6B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{140BECD7-0772-4B17-ACFF-39B95D13C6B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{140BECD7-0772-4B17-ACFF-39B95D13C6B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{140BECD7-0772-4B17-ACFF-39B95D13C6B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF6C1586-FA49-4091-A4B5-9D8441FFD226}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF6C1586-FA49-4091-A4B5-9D8441FFD226}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF6C1586-FA49-4091-A4B5-9D8441FFD226}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF6C1586-FA49-4091-A4B5-9D8441FFD226}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
