@@ -3,12 +3,12 @@
 <h3>Parent Child Relation</h3>
 
 <CascadingValue Value="@MessageForGrandChild" Name="message">
-<CascadingValue Value="@LuckyNumber" Name="luckyNumber">
-  <_ChildComponent OnButtonClicked="ShowMessage" 
-      Title="This title is passed from the parent component">
-    Rendered Fragment from parent
-  </_ChildComponent>
-</CascadingValue>
+  <CascadingValue Value="@LuckyNumber" Name="luckyNumber">
+    <_ChildComponent @ref="childComponenet" OnButtonClicked="ShowMessage"
+                     Title="This title is passed from the parent component">
+      Rendered Fragment from parent
+    </_ChildComponent>
+  </CascadingValue>
 </CascadingValue>
 
 <p>
@@ -20,10 +20,16 @@
 @*2nd way*@
 <_AnotherChildComponent placeholder="Placeholder from parent"></_AnotherChildComponent>
 
+<div class="row">
+  <button class="btn btn-success m-2 " style="width:200px;" @onclick="() => childComponenet.ToastrSuccess()">Toastr Success</button>
+</div>
+
 <_ChildComponent Title="This second component">
 </_ChildComponent>
 
 @code {
+
+  private _ChildComponent childComponenet;
 
   public string MessageForGrandChild = "This message is from your parent (ParentComponent)";
 

@@ -1,4 +1,6 @@
-﻿<div>
+﻿@inject IJSRuntime _JsRuntime
+
+<div>
   <div class="alert alert-info">@Title</div>
   <div class="alert alert-success">
     @if (ChildContent != null)
@@ -25,4 +27,9 @@
 
   [Parameter]
   public EventCallback OnButtonClicked { get; set; }
+
+  public async Task ToastrSuccess()
+  {
+    await _JsRuntime.ToastrSuccess("Operation Successful");
+  }
 }
