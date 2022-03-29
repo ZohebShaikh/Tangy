@@ -54,7 +54,7 @@ namespace Tangy_Business.Repository
       {
         return _mapper.Map<Category, CategoryDTO>(obj);
       }
-      return new ProductDTO();
+      return new CategoryDTO();
     }
 
     public async Task<IEnumerable<CategoryDTO>> GetAll()
