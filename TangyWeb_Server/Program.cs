@@ -8,9 +8,11 @@ using Tangy_Business.Repository;
 using Tangy_Business.Repository.IRepository;
 using TangyWeb_Server.Service.IService;
 using TangyWeb_Server.Service;
+using Syncfusion.Blazor;
 
 var builder = WebApplication.CreateBuilder(args);
 
+Syncfusion.Licensing.SyncfusionLicenseProvider.RegisterLicense("NjA0ODUzQDMyMzAyZTMxMmUzMGdZUG5lNUVrejNWZW1WS3dmbk5SVHdOYTNEMXlWazBaTUJqM3NnQmlWbms9");
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
@@ -21,6 +23,8 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 builder.Services.AddScoped<IFileUpload, FileUpload>();
+builder.Services.AddServerSideBlazor();
+builder.Services.AddSyncfusionBlazor(options => { options.IgnoreScriptIsolation = true; });
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
