@@ -13,7 +13,7 @@ namespace Tangy_Business.Mapper
   {
     public MappingProfile()
     {
-      CreateMap<Category,ProductDTO>().ReverseMap();
+      CreateMap<Category,CategoryDTO>().ReverseMap();
       CreateMap<Product,ProductDTO>().ReverseMap();
 
     }
