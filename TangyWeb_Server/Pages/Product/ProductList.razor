@@ -1,0 +1,112 @@
+﻿@page "/product"
+@inject IProductRepository _productRepository
+@inject IJSRuntime _jsRuntime
+
+<_DeleteConfirmation IsParentComponentLoading="IsLoading" ConfirmationChanged="ConfirmDelete_Click"></_DeleteConfirmation>
+<div class="row mt-4">
+  <div class="col-6">
+    <h4 class="card-title text-primary">Product List</h4>
+  </div>
+  <div class="col-4 offset-2">
+    <a href="product/create" class="btn btn-primary form-control">Add New Product</a>
+  </div>
+</div>
+
+<div class="col-12">
+  @if (Products.Any())
+  {
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Shop Favorites</th>
+          <th>Customer Favorites</th>
+          <th>Category</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @foreach(var product in Products)
+        {
+          <tr>
+            <td>
+              @product.Name
+            </td>
+            <th>
+              <input type="checkbox" disabled checked="@product.ShopFavorites">
+            </th>
+            <th>
+              <input type="checkbox" disabled checked="@product.CustomerFavorites">
+            </th>
+            <th>
+              @product.Category.Name
+            </th>
+            <td>
+              <NavLink href=@($"product/edit/{product.Id}") class="btn btn-primary">Edit</NavLink>
+              <button class="btn btn-danger" @onclick="() => HandleDelete(product.Id)">Delete</button>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  }
+  else
+  {
+    if (IsLoading)
+    {
+      //Loading gif
+      <div class="text-center">
+        <img src="/images/loading.gif"/>
+      </div>
+    }
+    else
+    {
+      //no records
+      <p>No records found.</p>
+    }
+  }
+
+</div>
+
+
+@code {
+  public IEnumerable<ProductDTO> Products { get; set; } = new List<ProductDTO>();
+  public bool IsLoading { get; set; }
+  private int DeleteProductId { get; set; } = 0;
+
+  protected override async Task OnAfterRenderAsync(bool firstRender)
+  {
+    if (firstRender)
+    {
+      await LoadProducts();
+    }
+  }
+
+  private async Task LoadProducts()
+  {
+    IsLoading = true;
+    StateHasChanged();
+    Products = await _productRepository.GetAll();
+    IsLoading = false;
+    StateHasChanged();
+  }
+
+  private void HandleDelete(int id)
+  {
+    DeleteProductId = id;
+    _jsRuntime.InvokeVoidAsync("ShowDeleteConfirmationModal");
+  }
+
+  public async Task ConfirmDelete_Click(bool isConfirmed)
+  {
+    IsLoading = true;
+    if (isConfirmed && DeleteProductId != 0)
+    {
+      //Delete
+      await _productRepository.Delete(DeleteProductId);
+      await LoadProducts();
+      await _jsRuntime.InvokeVoidAsync("HideDeleteConfirmationModal");
+    }
+    IsLoading = false;
+  }
+}
