@@ -4,9 +4,13 @@
 @inject IProductRepository _productRepository
 @inject ICategoryRepository _categoryRepository
 @inject NavigationManager _navigationManager
+@inject IFileUpload _fileUpload
+@inject IJSRuntime _jsRuntime
 
 <div class="row my-2">
   <h3 class="card-title text-primary mb-3 ml-3">@Title Product</h3>
+
+  <div class="col-md-10">
   @if (IsLoading)
   {
     <div class="text-center">
@@ -15,68 +19,78 @@
   }
   else
   {
-    <div class="col-10">
-      <EditForm Model="Product" OnValidSubmit="UpsertProduct">
-        <DataAnnotationsValidator/>
-        @*<ValidationSummary/>*@
-        <div class="form-group">
-          <label>Name</label>
-          <InputText @bind-Value="Product.Name" class="form-control"></InputText>
-          <ValidationMessage For="()=> Product.Name"></ValidationMessage>
-        </div>
-        <div class="form-group">
-          <label>Color</label>
-          <InputText @bind-Value="Product.Color" class="form-control"></InputText>
-          <ValidationMessage For="()=> Product.Color"></ValidationMessage>
-        </div>
-        <div class="form-group">
-          <label>Description</label>
-          <InputTextArea @bind-Value="Product.Description" class="form-control"></InputTextArea>
-          <ValidationMessage For="()=> Product.Description"></ValidationMessage>
-        </div>
-        <div class="row pt-3">
-          <div class="form-group col-6">
-            <div class="form-check">
-              <InputCheckbox @bind-Value="Product.ShopFavorites" class="form-check-input"></InputCheckbox>
-              <label class="form-check-label">Is Shop Favorites</label>
-            </div>
-          </div>
-          <div class="form-group col-6">
-            <div class="form-check">
-              <InputCheckbox @bind-Value="Product.CustomerFavorites" class="form-check-input"></InputCheckbox>
-              <label class="form-check-label">Is Customer Favorites</label>
-            </div>
-          </div>
-          <div class="form-group col-6">
-            <label class="form-check-label">Category</label>
-            <InputSelect @bind-Value="Product.CategoryId" class="form-select">
-              <option value="0" disabled="disabled" selected> ---Select Category---</option>
-              @foreach (var category in Categories) 
-              {
-                <option value="@category.Id">@category.Name</option>
-              }
-            </InputSelect>
+    <EditForm Model="Product" OnValidSubmit="UpsertProduct">
+      <DataAnnotationsValidator/>
+      @*<ValidationSummary/>*@
+      <div class="form-group">
+        <label>Name</label>
+        <InputText @bind-Value="Product.Name" class="form-control"></InputText>
+        <ValidationMessage For="()=> Product.Name"></ValidationMessage>
+      </div>
+      <div class="form-group">
+        <label>Color</label>
+        <InputText @bind-Value="Product.Color" class="form-control"></InputText>
+        <ValidationMessage For="()=> Product.Color"></ValidationMessage>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <InputTextArea @bind-Value="Product.Description" class="form-control"></InputTextArea>
+        <ValidationMessage For="()=> Product.Description"></ValidationMessage>
+      </div>
+      <div class="row pt-3">
+        <div class="form-group col-6">
+          <div class="form-check">
+            <InputCheckbox @bind-Value="Product.ShopFavorites" class="form-check-input"></InputCheckbox>
+            <label class="form-check-label">Is Shop Favorites</label>
           </div>
         </div>
-        <div class="form-group py-2">
-          <button class="btn btn-primary">@Title</button>
-          <NavLink href="product" class="btn btn-secondary">Back to Index</NavLink>
+        <div class="form-group col-6">
+          <div class="form-check">
+            <InputCheckbox @bind-Value="Product.CustomerFavorites" class="form-check-input"></InputCheckbox>
+            <label class="form-check-label">Is Customer Favorites</label>
+          </div>
         </div>
-      </EditForm>
-    </div>
+        <div class="form-group col-6">
+          <label class="form-check-label">Category</label>
+          <InputSelect @bind-Value="Product.CategoryId" class="form-select">
+            <option value="0" disabled="disabled" selected> ---Select Category---</option>
+            @foreach (var category in Categories) 
+            {
+              <option value="@category.Id">@category.Name</option>
+            }
+          </InputSelect>
+        </div>
+        <div class="form-group pt-4 col-6">
+          <InputFile OnChange="HandleImageUpload"></InputFile>  
+        </div>
+      </div>
+      <div class="form-group py-2">
+        <button class="btn btn-primary">@Title</button>
+        <NavLink href="product" class="btn btn-secondary">Back to Index</NavLink>
+      </div>
+    </EditForm>
   }
+  </div>
+  <div class="col-md-2">
+    <img src="@Product.ImageUrl" class="w-100" />
+  </div>
 </div>
 
 @code {
   [Parameter]
   public int Id { get; set; }
 
-  private ProductDTO Product { get; set; } = new ProductDTO();
+  private ProductDTO Product { get; set; } = new()
+  {
+    ImageUrl="/images/default.png"
+  };
   private IEnumerable<CategoryDTO> Categories { get; set; } = new List<CategoryDTO>();
 
   private string Title { get; set; } = "Create";
 
   public bool IsLoading { get; set; }
+
+  public string OldImageUrl { get; set; }
 
   protected override async Task OnAfterRenderAsync(bool firstRender)
   {
@@ -96,6 +110,7 @@
       //Update
       Title = "Update";
       Product = await _productRepository.Get(Id);
+      OldImageUrl = Product.ImageUrl;
     }
     IsLoading = false;
     StateHasChanged();
@@ -107,14 +122,52 @@
     {
       //create request
       await _productRepository.Create(Product);
+      await _jsRuntime.ToastrSuccess("Product updated successfully.");
     }
     else
     {
-      // edit request
+      // edit request(Update)
+      if(OldImageUrl != Product.ImageUrl)
+      {
+        _fileUpload.DeleteFile(OldImageUrl);
+      }
       await _productRepository.Update(Product);
+      await _jsRuntime.ToastrSuccess("Product updated successfully.");
     }
     _navigationManager.NavigateTo("product");
 
   }
 
+  private async Task HandleImageUpload(InputFileChangeEventArgs e)
+  {
+    IsLoading = true;
+    try
+    {
+      if (e.GetMultipleFiles().Count > 0)
+      {
+        foreach (var file in e.GetMultipleFiles())
+        {
+          System.IO.FileInfo fileInfo = new System.IO.FileInfo(file.Name);
+
+          if( fileInfo.Extension.ToLower() == ".jpg" ||
+              fileInfo.Extension.ToLower() == ".png" ||
+              fileInfo.Extension.ToLower() == ".jpeg"
+          )
+          {
+            Product.ImageUrl = await _fileUpload.UploadFile(file);
+          }
+          else
+          {
+            await _jsRuntime.ToastrFailed("Please select .jpg/.jpeg/.png file only");
+            return;
+          }
+        }
+      }
+    }
+    catch (Exception ex)
+    {
+      await _jsRuntime.ToastrFailed(ex.Message);
+    }
+    IsLoading = false;
+  }
 }
