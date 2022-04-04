@@ -6,6 +6,8 @@ using TangyWeb_Server.Data;
 using Tangy_DataAccess.Data;
 using Tangy_Business.Repository;
 using Tangy_Business.Repository.IRepository;
+using TangyWeb_Server.Service.IService;
+using TangyWeb_Server.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 builder.Services.AddScoped<ICategoryRepository, CategoryRepository>();
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IFileUpload, FileUpload>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
