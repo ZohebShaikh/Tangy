@@ -17,14 +17,12 @@ namespace Tangy_DataAccess
     //TODO: add navigation property
 
     [Required]
-    [Display(Name ="Order Total")]
     public double OrderTotal { get; set; }
 
     [Required]
     public DateTime OrderDate { get; set; }
 
     [Required]
-    [Display(Name ="Shipping Date")]
     public DateTime ShippingDate { get; set; }
 
     [Required]
@@ -36,13 +34,12 @@ namespace Tangy_DataAccess
     public string? PaymentIntentId { get; set; }
 
     [Required]
-    [Display(Name ="Name")]
     public string Name { get; set; }
 
-    [Required, Display(Name ="Phone Number")]
+    [Required]
     public string PhoneNumber { get; set; }
 
-    [Required, Display(Name ="Street Address")]
+    [Required]
     public string StreetAddress { get; set; }
 
     [Required]
@@ -51,8 +48,10 @@ namespace Tangy_DataAccess
     [Required]
     public string City { get; set; }  
 
-    [Required,Display(Name ="Postal Code")]
+    [Required]
     public string PostalCode { get; set; }
 
+    [Required]
+    public string Email { get; set; }
   }
 }
