@@ -1,6 +1,7 @@
 ﻿@page "/category"
 @inject ICategoryRepository _categoryRepository
 @inject IJSRuntime _jsRuntime
+@attribute [Authorize(Roles =StaticDetails.Role_Admin)]
 
 <_DeleteConfirmation IsParentComponentLoading="IsLoading" ConfirmationChanged="ConfirmDelete_Click"></_DeleteConfirmation>
 <div class="row mt-4">

@@ -15,5 +15,8 @@ namespace Tangy_Common
     public const string StatusShipped = "Shipped";
     public const string StatusRefunded = "Refunded";
     public const string StatusCancelled = "Cancelled";
+
+    public const string Role_Admin = "Admin";
+    public const string Role_Customer = "Customer";
   }
 }
