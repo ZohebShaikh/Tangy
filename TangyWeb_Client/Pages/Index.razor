@@ -1,6 +1,15 @@
 ﻿@page "/"
 @inject IProductService _productSerivce
 
+<AuthorizeView>
+  <Authorized>
+    <p>Welcome, @context.User.Identity.Name</p>
+  </Authorized>
+  <NotAuthorized>
+    <p>Not Signed in!</p>
+  </NotAuthorized>
+</AuthorizeView>
+
 @if (IsProcessing)
 {
   <div style="position:fixed;top:50%;left:50%;margin-top:-50px;margin-left:-100px;">
