@@ -13,6 +13,7 @@ namespace Tangy_Models
       SuccessUrl = "OrderConfirmation";
       CancelUrl = "Summary";
     }
+    
     public OrderDTO Order { get; set; }
     public string SuccessUrl { get; set; }
     public string CancelUrl { get; set; }
