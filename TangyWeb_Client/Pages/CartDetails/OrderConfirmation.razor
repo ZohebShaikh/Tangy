@@ -53,6 +53,7 @@
     var updatedOrder = await _orderService.MarkPaymentSuccessful(Order.OrderHeader);
     if(updatedOrder.Status== StaticDetails.StatusConfirmed)
     {
+      Order.OrderHeader.Status = updatedOrder.Status;
       await _localStorage.RemoveItemAsync(StaticDetails.Local_OrderDetails);
       await _localStorage.RemoveItemAsync(StaticDetails.ShoppingCart);
     }

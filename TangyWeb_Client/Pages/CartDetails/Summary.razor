@@ -166,11 +166,13 @@ else
           Order = Order
         };
       var result = await _paymentService.Checkout(paymentDto);
-      Order.OrderHeader.SessionId = result.Data.ToString();
+      var StripeSessionAndPaymentIntentId = result.Data.ToString().Split(";");
+      Order.OrderHeader.SessionId = StripeSessionAndPaymentIntentId[0];
+      Order.OrderHeader.PaymentIntentId = StripeSessionAndPaymentIntentId[1];
       var orderDTOSaved = await _orderService.Create(paymentDto);
 
       await _localStorage.SetItemAsync(StaticDetails.Local_OrderDetails, orderDTOSaved);
-      await _jsRuntime.InvokeVoidAsync("redirectToCheckout",result.Data.ToString());
+      await _jsRuntime.InvokeVoidAsync("redirectToCheckout",StripeSessionAndPaymentIntentId[0]);
     }
     catch (Exception e)
     {
