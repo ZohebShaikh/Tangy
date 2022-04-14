@@ -33,6 +33,7 @@ namespace TangyWeb_Client.Pages.Authentication
         Errors = result.Errors;
         ShowRegisterationErrors = true;
       }
+      IsProcessing = false;
     }
   }
 }

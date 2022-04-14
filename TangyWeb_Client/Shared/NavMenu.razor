@@ -21,6 +21,24 @@
     </ul>
     <form class="d-flex">
       <ul class="navbar-nav">
+        <AuthorizeView>
+          <Authorized>
+        <li class="nav-item p-0">
+          <NavLink class="nav-link" href="#">
+            <span class="p-2">
+              Hello, @context.User.Identity.Name
+            </span>
+          </NavLink>
+        </li>
+        <li class="nav-item p-0">
+          <NavLink class="nav-link" href="logout">
+            <span class="p-2">
+              Logout
+            </span>
+          </NavLink>
+        </li>
+          </Authorized>
+          <NotAuthorized>
         <li class="nav-item p-0">
           <NavLink class="nav-link" href="register">
             <span class="p-2">
@@ -35,6 +53,8 @@
             </span>
           </NavLink>
         </li>
+          </NotAuthorized>
+        </AuthorizeView>
       </ul>
     </form>
   </div>
