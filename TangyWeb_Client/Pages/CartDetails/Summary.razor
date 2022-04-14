@@ -3,6 +3,8 @@
 @inject IJSRuntime _jsRuntime
 @inject ILocalStorageService _localStorage
 @inject IProductService _productService
+@inject IOrderService _orderService
+@inject IPaymentService _paymentService
 @using  Microsoft.AspNetCore.Authorization
 @attribute [Authorize]
 
@@ -140,7 +142,7 @@ else
         Product = product
       };
       Order.OrderDetails.Add(orderDetailDTO);
-      Order.OrderHeader.OrderTotal += (cart.Count * productPrice.Price);
+      Order.OrderHeader.OrderTotal += (item.Count * productPrice.Price);
     }
 
     if (await _localStorage.GetItemAsync<UserDTO>(StaticDetails.Local_UserDetails) != null)
@@ -156,6 +158,23 @@ else
   }
   private async Task HandleCheckout()
   {
-    
+    try
+    {
+      IsProcessing = true;
+      var paymentDto = new StripePaymentDTO()
+        {
+          Order = Order
+        };
+      var result = await _paymentService.Checkout(paymentDto);
+      Order.OrderHeader.SessionId = result.Data.ToString();
+      var orderDTOSaved = await _orderService.Create(paymentDto);
+
+      await _localStorage.SetItemAsync(StaticDetails.Local_OrderDetails, orderDTOSaved);
+      await _jsRuntime.InvokeVoidAsync("redirectToCheckout",result.Data.ToString());
+    }
+    catch (Exception e)
+    {
+      await _jsRuntime.ToastrFailed(e.Message);
+    }
   }
 }

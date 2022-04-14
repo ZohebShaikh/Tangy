@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Stripe;
 using System.Text;
 using Tangy_Business.Repository;
 using Tangy_Business.Repository.IRepository;
@@ -84,6 +85,10 @@ builder.Services.AddAuthentication(opt =>
 });
 
 var app = builder.Build();
+
+// Stripe configuration
+
+StripeConfiguration.ApiKey = builder.Configuration.GetSection("Stripe")["ApiKey"];
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
